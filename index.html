@@ -3,10 +3,27 @@
 <title>Logger</title>
 <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/png" href="https://akermang.github.io/WeatherApp/sun-favicon.png" />
+
 <head>
+    <style>
+    div{
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: center;
+        background-color: azure;
+        padding: 10px;
+    }
+    </style>
 </head>
+
 <body>
-    <h2>logger test aggregating and auto sending every 5 logs or every 5000msc </h2>
+    <div>
+        <h2>logger tester</h2>
+        <h2> Aggregating and auto sending </h2>
+        <h2>every 5 logs or every 5000msc, open console and try:</h2>
+        <h1> logger.writeLog()</h1>
+
+    </div>
 </body>
 
 
@@ -25,7 +42,7 @@
             };
 
             this.stop = () => clearInterval(this.init);
-            
+
             // privete //
             this._saveLog = (log) => {
                 let logs = localStorage.logs;
