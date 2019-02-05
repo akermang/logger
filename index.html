@@ -6,13 +6,13 @@
 
 <head>
     <style>
-    div{
-        max-width: 400px;
-        margin: 20px auto;
-        text-align: center;
-        background-color: azure;
-        padding: 10px;
-    }
+        div {
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: azure;
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -32,13 +32,13 @@
     const formats = { jason: "JSON", xml: "XML", string: "string" };
 
     class Logger {
-        constructor(time = 5000, targets) {
+        constructor(time = 5000, targets, maxLogsToAggregate = 5) {
             this._counter = 0;
             // public methods //
-            this.writeLog = (targetsArray, textString, formatObj) => {
-                this._saveLog({ targetsArray, textString, formatObj });
+            this.writeLog = (...arg) => {
+                this._saveLog({ ...arg });
                 this._counter += 1;
-                this._counter >= 5 ? this._sendLogs(this._getLogs()) : null;
+                this._counter >= maxLogsToAggregate ? this._sendLogs(this._getLogs()) : null;
             };
 
             this.stop = () => clearInterval(this.init);
@@ -69,7 +69,7 @@
 
             this._sendLogs = (logs) => {
                 console.log("fetchPostLogs(logs):", logs);
-                // fetchLogsAction(API,logs).then()...
+                // fetchLogsAction(target,logs).then()...
                 this._clearLogs();
                 this._counter = 0;
             }
@@ -77,7 +77,7 @@
     }
 
     // create new Logger //
-    const logger = new Logger(5000, targets);
+    const logger = new Logger(5000, targets, 5);
     // add  new property to logger //
     logger.formats = formats;
     // use public method //
