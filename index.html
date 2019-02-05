@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<title>Logger</title>
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/png" href="https://akermang.github.io/WeatherApp/sun-favicon.png" />
+<head>
+</head>
+<body>
+    <h2>logger test aggregating and auto sending every 5 logs or every 5000msc </h2>
+</body>
+
+
+<script>
+    const targets = { console: "console", webApi: "webApi", popup: "popup" };
+    const formats = { jason: "JSON", xml: "XML", string: "string" };
+
+    class Logger {
+        constructor(time = 5000, targets) {
+            this._counter = 0;
+            // public methods //
+            this.writeLog = (targetsArray, textString, formatObj) => {
+                this._saveLog({ targetsArray, textString, formatObj });
+                this._counter += 1;
+                this._counter >= 5 ? this._sendLogs(this._getLogs()) : null;
+            };
+
+            this.stop = () => clearInterval(this.init);
+            
+            // privete //
+            this._saveLog = (log) => {
+                let logs = localStorage.logs;
+                if (logs) {
+                    logs = JSON.parse(logs);
+                    logs.push(log);
+                    localStorage.logs = JSON.stringify(logs);
+                    return
+                }
+                localStorage.logs = JSON.stringify([log]);
+            };
+
+            this._getLogs = () => {
+                return localStorage.logs ? JSON.parse(localStorage.logs) : null;
+            }
+
+            this._init = setInterval(() => {
+                this._getLogs() == null ? null : this._sendLogs(this._getLogs());
+            }, time);
+
+            this._clearLogs = () => {
+                localStorage.removeItem("logs")
+            }
+
+            this._sendLogs = (logs) => {
+                console.log("fetchPostLogs(logs):", logs);
+                // fetchLogsAction(API,logs).then()...
+                this._clearLogs();
+                this._counter = 0;
+            }
+        }
+    }
+
+    // create new Logger //
+    const logger = new Logger(5000, targets);
+    // add  new property to logger //
+    logger.formats = formats;
+    // use public method //
+    logger.writeLog([targets.console, targets.webApi], "hello log 1 ", formats.json);
+</script>
+
+</html>
